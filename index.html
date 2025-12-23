@@ -1,78 +1,70 @@
-# agathaangel.github.io
-Loja de quadros da Ágatha Angel
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Loja de Quadros</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-    }
-    .produto {
-      background: white;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-    }
-    button {
-      padding: 10px;
-      background: black;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    .seguro {
-      color: green;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Ágatha Angel</title>
+<style>
+body{margin:0;font-family:Arial;background:#ffeef4;color:#333}
+header{background:#ffb6d5;padding:20px;text-align:center;font-size:28px;font-weight:bold}
+.container{padding:20px}
+.produtos{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px}
+.produto{background:#fff;border-radius:12px;padding:15px}
+button{background:#fff;color:#000;border:1px solid #000;padding:8px 12px;border-radius:8px;cursor:pointer;margin:4px}
+.carrinhoBox{background:#000;color:#fff;padding:15px;border-radius:12px;margin-top:20px}
+.admin{display:none;background:#fff;padding:15px;border-radius:12px;margin-top:20px}
+footer{background:#ffb6d5;padding:20px;text-align:center;margin-top:30px}
+.cookies{position:fixed;bottom:0;width:100%;background:#fff;padding:10px;text-align:center}
+</style>
 </head>
 <body>
-
-<h1>🖼️ Loja de Quadros</h1>
-<p class="seguro">✔️ Site 100% seguro</p>
-
-<div class="produto">
-  <h2>Quadro Personalizado</h2>
-  <p>Digite o tamanho desejado (em cm):</p>
-  <input type="number" id="tamanho" placeholder="Ex: 40">
-
-  <p id="classificacao"></p>
-
-  <button onclick="classificar()">Adicionar ao carrinho</button>
+<header>
+✨ Seja bem-vindo(a) à Ágatha Angel ✨<br>
+<button onclick="alternarVisualizacao()">👁️ Ver como cliente / artista</button>
+</header>
+<div class="container">
+<h2>Catálogo de Quadros</h2>
+<div class="produtos" id="listaProdutos"></div>
+<div class="carrinhoBox">
+<h3>🛒 Carrinho</h3>
+<div id="itensCarrinho"></div>
+<p><strong>Total:</strong> R$ <span id="total">0</span></p>
+<p>✅ 100% seguro<br>💳 Pix ou pagamento online<br>📱 Pode pagar pelo WhatsApp e enviar comprovante</p>
+<button onclick="finalizarWhats()">Pagar agora pelo WhatsApp</button>
 </div>
-
-<h3>Total a pagar: R$ 149,90</h3>
-
-<h2>Formas de pagamento</h2>
-<ul>
-  <li>💳 Pagamento online imediato</li>
-  <li>📱 PIX via WhatsApp (envio de comprovante)</li>
-</ul>
-
-<p>Se preferir pagar pelo WhatsApp, fale conosco e envie o comprovante.</p>
-
+<div class="admin">
+<h3>Painel do Artista</h3>
+<input id="nome" placeholder="Nome do quadro"><br><br>
+<input id="preco" placeholder="Preço"><br><br>
+<input id="tamanho" placeholder="Tamanho (ex: 40x60)"><br>
+<small>Classificação automática: P / M / G</small><br><br>
+<textarea id="descricao" placeholder="Descrição"></textarea><br><br>
+<button onclick="adicionarProduto()">Adicionar produto</button>
+</div>
+</div>
+<footer>
+<p>📧 Email: agathaangelmarinho2008@gmail.com</p>
+<p>📱 WhatsApp: <a href="https://wa.me/5521988282732" target="_blank">Falar no WhatsApp</a></p>
+<p>💸 Pix: agathaangelestudando@gmail.com</p>
+<p>📸 Instagram: @a.a_art.s</p>
+<p>✨ Até breve ✨</p>
+</footer>
+<div class="cookies" id="cookies">Este site usa cookies 🍪 <button onclick="aceitarCookies()">Aceitar</button></div>
 <script>
-  function classificar() {
-    let tamanho = document.getElementById("tamanho").value;
-    let texto = "";
-
-    if (tamanho <= 30) {
-      texto = "Tamanho P";
-    } else if (tamanho <= 60) {
-      texto = "Tamanho M";
-    } else {
-      texto = "Tamanho G";
-    }
-
-    document.getElementById("classificacao").innerText =
-      "Classificação do quadro: " + texto;
-  }
+let modoArtista=false;
+let produtos=JSON.parse(localStorage.getItem('produtos'))||[];
+let carrinho=[];
+function alternarVisualizacao(){modoArtista=!modoArtista;document.querySelector('.admin').style.display=modoArtista?'block':'none';alert(modoArtista?'Modo artista':'Modo cliente')}
+function classificarTamanho(txt){const nums=txt.match(/\d+/g);if(!nums)return'P';const w=Number(nums[0]);const h=nums[1]?Number(nums[1]):1;const area=w*h;if(area<2000)return'P';if(area<5000)return'M';return'G'}
+function render(){const lista=document.getElementById('listaProdutos');lista.innerHTML='';produtos.forEach((p,i)=>{lista.innerHTML+=`<div class='produto'><h3>${p.nome}</h3><p>${p.descricao}</p><p>Tamanho: ${p.tamanho} (${p.classe})</p><p>Preço: R$ ${p.preco}</p><button onclick='addCarrinho(${i})'>Adicionar ao carrinho</button><button onclick='comprar(${i})'>Comprar agora</button>${modoArtista?`<button onclick='remover(${i})'>Excluir</button>`:''}</div>`})}
+function adicionarProduto(){const classe=classificarTamanho(tamanho.value);produtos.push({nome:nome.value,descricao:descricao.value,tamanho:tamanho.value,classe:classe,preco:Number(preco.value)});localStorage.setItem('produtos',JSON.stringify(produtos));render()}
+function remover(i){produtos.splice(i,1);localStorage.setItem('produtos',JSON.stringify(produtos));render()}
+function addCarrinho(i){carrinho.push(produtos[i]);renderCarrinho()}
+function renderCarrinho(){let total=0;itensCarrinho.innerHTML='';carrinho.forEach(p=>{total+=p.preco;itensCarrinho.innerHTML+=`<p>${p.nome} - R$ ${p.preco}</p>`});document.getElementById('total').innerText=total}
+function comprar(i){const p=produtos[i];let msg=`Olá! Quero comprar o quadro:\n${p.nome}\nTamanho: ${p.tamanho} (${p.classe})\nPreço: R$ ${p.preco}\nForma de pagamento: Pix`;window.open(`https://wa.me/5521988282732?text=${encodeURIComponent(msg)}`)}
+function finalizarWhats(){let msg='Olá, quero comprar:%0A';carrinho.forEach(p=>msg+=`${p.nome} - R$ ${p.preco}%0A`);msg+=`Total: R$ ${total.innerText}%0AForma de pagamento: Pix`;window.open(`https://wa.me/5521988282732?text=${msg}`)}
+function aceitarCookies(){cookies.style.display='none'}
+render();
 </script>
-
 </body>
 </html>
