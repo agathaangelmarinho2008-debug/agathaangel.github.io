@@ -1,0 +1,78 @@
+# agathaangel.github.io
+Loja de quadros da Ágatha Angel
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Loja de Quadros</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .produto {
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    button {
+      padding: 10px;
+      background: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .seguro {
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🖼️ Loja de Quadros</h1>
+<p class="seguro">✔️ Site 100% seguro</p>
+
+<div class="produto">
+  <h2>Quadro Personalizado</h2>
+  <p>Digite o tamanho desejado (em cm):</p>
+  <input type="number" id="tamanho" placeholder="Ex: 40">
+
+  <p id="classificacao"></p>
+
+  <button onclick="classificar()">Adicionar ao carrinho</button>
+</div>
+
+<h3>Total a pagar: R$ 149,90</h3>
+
+<h2>Formas de pagamento</h2>
+<ul>
+  <li>💳 Pagamento online imediato</li>
+  <li>📱 PIX via WhatsApp (envio de comprovante)</li>
+</ul>
+
+<p>Se preferir pagar pelo WhatsApp, fale conosco e envie o comprovante.</p>
+
+<script>
+  function classificar() {
+    let tamanho = document.getElementById("tamanho").value;
+    let texto = "";
+
+    if (tamanho <= 30) {
+      texto = "Tamanho P";
+    } else if (tamanho <= 60) {
+      texto = "Tamanho M";
+    } else {
+      texto = "Tamanho G";
+    }
+
+    document.getElementById("classificacao").innerText =
+      "Classificação do quadro: " + texto;
+  }
+</script>
+
+</body>
+</html>
